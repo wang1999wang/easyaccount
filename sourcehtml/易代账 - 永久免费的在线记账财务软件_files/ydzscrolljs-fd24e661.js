@@ -1,0 +1,1 @@
+MC.define("ee/headerscroll",function(exports){var e=function(e,n){e=e||"header-clone",n&&(n="."+n),$(function(){$(window).scroll(function(){var o,d,l=$(document).scrollTop();d=$("#header_clone"),o=$(".header"),l>0?d.length?d.show():(o=$(".header"),d=o.clone(),d.addClass(e).attr("id","header_clone"),$(n||"body").append(d)):d.hide()})})};exports.onScroll=e});
