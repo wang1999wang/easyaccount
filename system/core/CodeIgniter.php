@@ -395,8 +395,31 @@ if ( ! is_php('5.4'))
  *  controller methods that begin with an underscore.
  */
 
+    $query_string = remove_invisible_characters($_SERVER['REQUEST_URI']);
+    $segments = explode("/",$query_string);
+    if(count($segments)>=4&&$segments[3]){
+        $module=$segments[1];
+        $controller=$segments[2];
+        $segments=explode('?',$segments[3]);
+        $action=$segments[0]?$segments[0]:'Index';
+    }else{
+        if(count($segments)>=3){
+            $module=$segments[1]?$segments[1]:'Index';
+            $controller=$segments[2]?$segments[2]:'Index';
+        }else if(count($segments)>=2){
+            $module=$segments[1]?$segments[1]:'Index';
+            $controller='Index';
+        }else{
+            $module='Index';
+            $controller='Index';
+        }
+        $action='Index';
+    }
+
 	$e404 = FALSE;
 	$class = ucfirst($RTR->class);
+    $class=$class?$class:$controller;
+    $RTR->directory=$RTR->directory?$RTR->directory:$module.'/';
 	$method = $RTR->method;
 
 	if (empty($class) OR ! file_exists(APPPATH.'controllers/'.$RTR->directory.$class.'.php'))
@@ -405,7 +428,7 @@ if ( ! is_php('5.4'))
 	}
 	else
 	{
-		require_once(APPPATH.'controllers/'.$RTR->directory.$class.'.php');
+		require_once(APPPATH.'controllers/'.$RTR->directory.$class.'.php');echo APPPATH.'controllers/'.$RTR->directory.$class.'.php';
 
 		if ( ! class_exists($class, FALSE) OR $method[0] === '_' OR method_exists('CI_Controller', $method))
 		{
